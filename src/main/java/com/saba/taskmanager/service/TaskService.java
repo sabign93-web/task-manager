@@ -1,6 +1,7 @@
 package com.saba.taskmanager.service;
 
 import com.saba.taskmanager.entity.Task;
+import com.saba.taskmanager.exception.TaskNotFoundException;
 import com.saba.taskmanager.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,7 @@ public class TaskService {
                     task.setDescription(updatedTask.getDescription());
                     task.setCompleted(updatedTask.isCompleted());
                     return taskRepository.save(task);
-                }).orElseThrow(() -> new RuntimeException("Task not found with id: " + id));
+                }).orElseThrow(() -> new TaskNotFoundException("Task not found with id: " + id));
     }
     public void deleteTask(Long id){
         taskRepository.deleteById(id);
