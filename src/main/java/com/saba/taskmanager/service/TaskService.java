@@ -3,7 +3,10 @@ package com.saba.taskmanager.service;
 import com.saba.taskmanager.entity.Task;
 import com.saba.taskmanager.exception.TaskNotFoundException;
 import com.saba.taskmanager.repository.TaskRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -20,12 +23,16 @@ public class TaskService {
     public Task createTask(Task task){
         return taskRepository.save(task);
     }
-    public List <Task> getAllTasks(){
-        return taskRepository.findAll();
+
+    public List<Task> getAllTasks(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return taskRepository.findAll(pageable).getContent();
     }
+
     public Optional<Task> getTaskById(Long id){
         return taskRepository.findById(id);
     }
+
     public Task updateTask(Long id, Task updatedTask){
         return taskRepository.findById(id)
                 .map(task -> {
@@ -35,6 +42,7 @@ public class TaskService {
                     return taskRepository.save(task);
                 }).orElseThrow(() -> new TaskNotFoundException("Task not found with id: " + id));
     }
+
     public void deleteTask(Long id){
         taskRepository.deleteById(id);
     }

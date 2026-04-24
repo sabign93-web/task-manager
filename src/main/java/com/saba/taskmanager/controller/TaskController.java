@@ -32,8 +32,8 @@ public class TaskController {
     }
 
     @GetMapping
-    public List<TaskResponseDto> getAllTasks() {
-        return taskService.getAllTasks()
+    public List<TaskResponseDto> getAllTasks(@RequestParam int page, @RequestParam int size) {
+        return taskService.getAllTasks(page, size)
                 .stream()
                 .map(taskMapper::toResponseDto)
                 .collect(Collectors.toList());
