@@ -1,11 +1,13 @@
 package com.saba.taskmanager.controller;
 
+import com.saba.taskmanager.dto.PagedResponseDto;
 import com.saba.taskmanager.dto.TaskRequestDto;
 import com.saba.taskmanager.dto.TaskResponseDto;
 import com.saba.taskmanager.entity.Task;
 import com.saba.taskmanager.mapper.TaskMapper;
 import com.saba.taskmanager.service.TaskService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,11 +34,27 @@ public class TaskController {
     }
 
     @GetMapping
-    public List<TaskResponseDto> getAllTasks(@RequestParam int page, @RequestParam int size) {
-        return taskService.getAllTasks(page, size)
-                .stream()
-                .map(taskMapper::toResponseDto)
-                .collect(Collectors.toList());
+    public PagedResponseDto<TaskResponseDto> getAllTasks(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction) {
+
+        Page<Task> taskPage = taskService.getAllTasks(page, size, sortBy, direction);
+
+        PagedResponseDto<TaskResponseDto> response = new PagedResponseDto<>();
+        response.setContent(
+                taskPage.getContent()
+                        .stream()
+                        .map(taskMapper::toResponseDto)
+                        .toList()
+        );
+        response.setPage(taskPage.getNumber());
+        response.setSize(taskPage.getSize());
+        response.setTotalElements(taskPage.getTotalElements());
+        response.setTotalPages(taskPage.getTotalPages());
+
+        return response;
     }
 
     @GetMapping("/{id}")
@@ -58,6 +76,22 @@ public class TaskController {
     public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
         taskService.deleteTask(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/search")
+    public List<TaskResponseDto> searchTasksByTitle(@RequestParam String title) {
+        return taskService.searchTasksByTitle(title)
+                .stream()
+                .map(taskMapper::toResponseDto)
+                .toList();
+    }
+
+    @GetMapping("/filter")
+    public List<TaskResponseDto> findByCompleted (@RequestParam Boolean completed) {
+        return taskService.findByCompleted(completed)
+                .stream()
+                .map(taskMapper::toResponseDto)
+                .toList();
     }
 
 }

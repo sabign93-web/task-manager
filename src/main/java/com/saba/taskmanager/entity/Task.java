@@ -1,9 +1,6 @@
 package com.saba.taskmanager.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -24,6 +21,10 @@ public class Task {
 
     private boolean completed;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     public Task(){
 
     }
@@ -33,24 +34,38 @@ public class Task {
         this.completed = completed;
     }
     public Long getId() {
+
         return id;
     }
     public String getTitle(){
+
         return title;
     }
     public void setTitle(String title){
+
         this.title = title;
     }
     public void setDescription(String description){
+
         this.description = description;
     }
     public String getDescription(){
+
         return description;
     }
     public boolean isCompleted(){
+
         return completed;
     }
     public void setCompleted(boolean completed){
+
         this.completed = completed;
+    }
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

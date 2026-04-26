@@ -3,8 +3,10 @@ package com.saba.taskmanager.service;
 import com.saba.taskmanager.entity.Task;
 import com.saba.taskmanager.exception.TaskNotFoundException;
 import com.saba.taskmanager.repository.TaskRepository;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 
@@ -24,9 +26,13 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
-    public List<Task> getAllTasks(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return taskRepository.findAll(pageable).getContent();
+    public Page<Task> getAllTasks(int page, int size, String sortBy, String direction) {
+        Sort sort = direction.equalsIgnoreCase("asc")
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return taskRepository.findAll(pageable);
     }
 
     public Optional<Task> getTaskById(Long id){
@@ -44,6 +50,15 @@ public class TaskService {
     }
 
     public void deleteTask(Long id){
+
         taskRepository.deleteById(id);
+    }
+
+    public List<Task> searchTasksByTitle(String title) {
+        return taskRepository.findByTitleContainingIgnoreCase(title);
+    }
+
+    public List<Task> findByCompleted(boolean completed ) {
+        return taskRepository.findByCompleted(completed);
     }
 }
