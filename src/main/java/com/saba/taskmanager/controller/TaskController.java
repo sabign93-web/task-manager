@@ -29,7 +29,7 @@ public class TaskController {
     @PostMapping
     public TaskResponseDto createTask(@Valid @RequestBody TaskRequestDto taskRequestDto) {
         Task task = taskMapper.toEntity(taskRequestDto);
-        Task savedTask = taskService.createTask(task);
+        Task savedTask = taskService.createTask(task, taskRequestDto.getUserId(), taskRequestDto.getProjectId());
         return taskMapper.toResponseDto(savedTask);
     }
 
@@ -68,14 +68,14 @@ public class TaskController {
     public ResponseEntity<TaskResponseDto> updateTask(@PathVariable Long id,
                                                       @Valid @RequestBody TaskRequestDto taskRequestDto) {
         Task task = taskMapper.toEntity(taskRequestDto);
-        Task updatedTask = taskService.updateTask(id, task);
+        Task updatedTask = taskService.updateTask(id, task, taskRequestDto.getUserId(), taskRequestDto.getProjectId());
         return ResponseEntity.ok(taskMapper.toResponseDto(updatedTask));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
+    public ResponseEntity<String> deleteTask(@PathVariable Long id) {
         taskService.deleteTask(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Task deleted successfully");
     }
 
     @GetMapping("/search")

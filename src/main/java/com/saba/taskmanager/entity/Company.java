@@ -20,6 +20,9 @@ public class Company {
     @OneToMany(mappedBy = "company")
     private List<User> users;
 
+    @OneToMany(mappedBy = "company")
+    private List<Project> projects;
+
     public Company() {
     }
 
@@ -66,11 +69,21 @@ public class Company {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
+
     public List<User> getUsers() {
         return users;
     }
 
     public void setUsers(List<User> users) {
         this.users = users;
+    }
+
+    public List<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
     }
 }
