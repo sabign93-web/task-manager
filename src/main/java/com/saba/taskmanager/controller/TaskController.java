@@ -153,4 +153,12 @@ public class TaskController {
                 .toList();
     }
 
+    @GetMapping("/upcoming")
+    public List<TaskResponseDto> getUpcomingTasks() {
+        return taskService.getUpcomingTasks()
+                .stream()
+                .map(taskMapper::toResponseDto)
+                .toList();
+    }
+
 }

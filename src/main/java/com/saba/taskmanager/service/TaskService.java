@@ -207,4 +207,12 @@ public class TaskService {
     public List<Task> getRecentTasks() {
         return taskRepository.findTop5ByOrderByCreatedAtDesc();
     }
+
+    public List<Task> getUpcomingTasks() {
+        return taskRepository
+                .findTop5ByDueDateIsNotNullAndDueDateGreaterThanEqualAndStatusNotOrderByDueDateAsc(
+                        LocalDate.now(),
+                        TaskStatus.DONE
+                );
+    }
 }
