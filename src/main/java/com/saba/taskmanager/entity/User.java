@@ -29,6 +29,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Task> tasks;
 
+    @ManyToMany(mappedBy = "users")
+    private List<Project> projects;
+
     public User() {
     }
 
@@ -96,5 +99,13 @@ public class User {
 
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    public List<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
     }
 }

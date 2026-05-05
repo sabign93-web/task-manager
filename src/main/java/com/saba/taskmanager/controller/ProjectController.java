@@ -1,9 +1,6 @@
 package com.saba.taskmanager.controller;
 
-import com.saba.taskmanager.dto.ProjectRequestDto;
-import com.saba.taskmanager.dto.ProjectResponseDto;
-import com.saba.taskmanager.dto.TaskResponseDto;
-import com.saba.taskmanager.dto.UserResponseDto;
+import com.saba.taskmanager.dto.*;
 import com.saba.taskmanager.entity.Project;
 import com.saba.taskmanager.mapper.ProjectMapper;
 import com.saba.taskmanager.mapper.TaskMapper;
@@ -67,4 +64,21 @@ public class ProjectController {
                 .map(userMapper::toResponseDto)
                 .toList();
     }
+
+    @PostMapping("/{id}/users")
+    public ProjectResponseDto addUserToProject(@PathVariable Long id,
+                                               @RequestBody ProjectMemberRequestDto projectMemberRequestDto) {
+        Project updatedProject = projectService.addUserToProject(id, projectMemberRequestDto.getUserId());
+        return projectMapper.toResponseDto(updatedProject);
+    }
+
+    @GetMapping("/{id}/members")
+    public List<UserResponseDto> getProjectMembers(@PathVariable Long id) {
+        return projectService.getUsersByProjectMembership(id)
+                .stream()
+                .map(userMapper::toResponseDto)
+                .toList();
+    }
+
+
 }

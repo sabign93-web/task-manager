@@ -1,9 +1,9 @@
 package com.saba.taskmanager.controller;
 
-import com.saba.taskmanager.dto.PagedResponseDto;
-import com.saba.taskmanager.dto.TaskRequestDto;
-import com.saba.taskmanager.dto.TaskResponseDto;
+import com.saba.taskmanager.dto.*;
 import com.saba.taskmanager.entity.Task;
+import com.saba.taskmanager.entity.TaskPriority;
+import com.saba.taskmanager.entity.TaskStatus;
 import com.saba.taskmanager.mapper.TaskMapper;
 import com.saba.taskmanager.service.TaskService;
 import jakarta.validation.Valid;
@@ -29,7 +29,16 @@ public class TaskController {
     @PostMapping
     public TaskResponseDto createTask(@Valid @RequestBody TaskRequestDto taskRequestDto) {
         Task task = taskMapper.toEntity(taskRequestDto);
-        Task savedTask = taskService.createTask(task, taskRequestDto.getUserId(), taskRequestDto.getProjectId());
+
+        Task savedTask = taskService.createTask(
+                task,
+                taskRequestDto.getUserId(),
+                taskRequestDto.getProjectId(),
+                taskRequestDto.getTagIds(),
+                taskRequestDto.getReporterId(),
+                taskRequestDto.getAssigneeId()
+        );
+
         return taskMapper.toResponseDto(savedTask);
     }
 
@@ -68,14 +77,18 @@ public class TaskController {
     public ResponseEntity<TaskResponseDto> updateTask(@PathVariable Long id,
                                                       @Valid @RequestBody TaskRequestDto taskRequestDto) {
         Task task = taskMapper.toEntity(taskRequestDto);
-        Task updatedTask = taskService.updateTask(id, task, taskRequestDto.getUserId(), taskRequestDto.getProjectId());
-        return ResponseEntity.ok(taskMapper.toResponseDto(updatedTask));
-    }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteTask(@PathVariable Long id) {
-        taskService.deleteTask(id);
-        return ResponseEntity.ok("Task deleted successfully");
+        Task updatedTask = taskService.updateTask(
+                id,
+                task,
+                taskRequestDto.getUserId(),
+                taskRequestDto.getProjectId(),
+                taskRequestDto.getTagIds(),
+                taskRequestDto.getReporterId(),
+                taskRequestDto.getAssigneeId()
+        );
+
+        return ResponseEntity.ok(taskMapper.toResponseDto(updatedTask));
     }
 
     @GetMapping("/search")
@@ -86,12 +99,51 @@ public class TaskController {
                 .toList();
     }
 
-    @GetMapping("/filter")
-    public List<TaskResponseDto> findByCompleted (@RequestParam Boolean completed) {
-        return taskService.findByCompleted(completed)
+    @GetMapping("/tag/{tagId}")
+    public List<TaskResponseDto> getTasksByTagId(@PathVariable Long tagId) {
+        return taskService.getTasksByTagId(tagId)
                 .stream()
                 .map(taskMapper::toResponseDto)
                 .toList();
+    }
+
+    @GetMapping("/overdue")
+    public List<TaskResponseDto> getOverdueTasks() {
+        return taskService.getOverdueTasks()
+                .stream()
+                .map(taskMapper::toResponseDto)
+                .toList();
+    }
+
+    @GetMapping("/status/{status}")
+    public List<TaskResponseDto> getTasksByStatus(@PathVariable TaskStatus status) {
+        return taskService.getTasksByStatus(status)
+                .stream()
+                .map(taskMapper::toResponseDto)
+                .toList();
+    }
+
+    @GetMapping("/priority/{priority}")
+    public List<TaskResponseDto> getTasksByPriority(@PathVariable TaskPriority priority) {
+        return taskService.getTasksByPriority(priority)
+                .stream()
+                .map(taskMapper::toResponseDto)
+                .toList();
+    }
+
+    @GetMapping("/dashboard-summary")
+    public DashboardSummaryDto getDashboardSummary() {
+        return taskService.getDashboardSummary();
+    }
+
+    @GetMapping("/chart/status")
+    public List<TaskChartItemDto> getTasksByStatusChart() {
+        return taskService.getTasksByStatusChart();
+    }
+
+    @GetMapping("/chart/priority")
+    public List<TaskChartItemDto> getTasksByPriorityChart() {
+        return taskService.getTasksByPriorityChart();
     }
 
 }

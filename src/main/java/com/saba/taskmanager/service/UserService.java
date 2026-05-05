@@ -80,4 +80,18 @@ public class UserService {
 
         return taskRepository.findByUserId(user.getId());
     }
+
+    public List<Task> getAssignedTasksByUserId(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
+
+        return taskRepository.findByAssigneeId(user.getId());
+    }
+
+    public List<Task> getReportedTasksByUserId(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
+
+        return taskRepository.findByReporterId(user.getId());
+    }
 }

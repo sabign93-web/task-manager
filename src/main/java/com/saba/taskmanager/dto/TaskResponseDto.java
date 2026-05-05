@@ -5,6 +5,7 @@ import com.saba.taskmanager.entity.TaskStatus;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class TaskResponseDto {
 
@@ -13,8 +14,6 @@ public class TaskResponseDto {
     private String title;
 
     private String description;
-
-    private boolean completed;
 
     private TaskStatus status;
 
@@ -35,6 +34,18 @@ public class TaskResponseDto {
     private String projectName;
 
     private String projectKey;
+
+    private List<Long> tagIds;
+
+    private List<String> tagNames;
+
+    private Long reporterId;
+
+    private String reporterName;
+
+    private Long assigneeId;
+
+    private String assigneeName;
 
     public TaskResponseDto() {
     }
@@ -62,15 +73,6 @@ public class TaskResponseDto {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    public boolean isCompleted() {
-        return completed;
-    }
-
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
-    }
-
 
     public TaskStatus getStatus() {
         return status;
@@ -170,6 +172,78 @@ public class TaskResponseDto {
     public void setProjectKey(String projectKey) {
 
         this.projectKey = projectKey;
+
+    }
+
+    public List<Long> getTagIds() {
+
+        return tagIds;
+
+    }
+
+    public void setTagIds(List<Long> tagIds) {
+
+        this.tagIds = tagIds;
+
+    }
+
+    public List<String> getTagNames() {
+
+        return tagNames;
+
+    }
+
+    public void setTagNames(List<String> tagNames) {
+
+        this.tagNames = tagNames;
+
+    }
+
+    public Long getReporterId() {
+
+        return reporterId;
+
+    }
+
+    public void setReporterId(Long reporterId) {
+
+        this.reporterId = reporterId;
+
+    }
+
+    public String getReporterName() {
+
+        return reporterName;
+
+    }
+
+    public void setReporterName(String reporterName) {
+
+        this.reporterName = reporterName;
+
+    }
+
+    public Long getAssigneeId() {
+
+        return assigneeId;
+
+    }
+
+    public void setAssigneeId(Long assigneeId) {
+
+        this.assigneeId = assigneeId;
+
+    }
+
+    public String getAssigneeName() {
+
+        return assigneeName;
+
+    }
+
+    public void setAssigneeName(String assigneeName) {
+
+        this.assigneeName = assigneeName;
 
     }
 }

@@ -12,7 +12,6 @@ public class TaskMapper {
         Task task = new Task();
         task.setTitle(taskRequestDto.getTitle());
         task.setDescription(taskRequestDto.getDescription());
-        task.setCompleted(taskRequestDto.isCompleted());
         task.setStatus(taskRequestDto.getStatus());
         task.setPriority(taskRequestDto.getPriority());
         task.setDueDate(taskRequestDto.getDueDate());
@@ -21,10 +20,10 @@ public class TaskMapper {
 
     public TaskResponseDto toResponseDto(Task task) {
         TaskResponseDto taskResponseDto = new TaskResponseDto();
+
         taskResponseDto.setId(task.getId());
         taskResponseDto.setTitle(task.getTitle());
         taskResponseDto.setDescription(task.getDescription());
-        taskResponseDto.setCompleted(task.isCompleted());
         taskResponseDto.setStatus(task.getStatus());
         taskResponseDto.setPriority(task.getPriority());
         taskResponseDto.setDueDate(task.getDueDate());
@@ -35,10 +34,41 @@ public class TaskMapper {
             taskResponseDto.setUserId(task.getUser().getId());
             taskResponseDto.setUserName(task.getUser().getFirstName() + " " + task.getUser().getLastName());
         }
+
         if (task.getProject() != null) {
             taskResponseDto.setProjectId(task.getProject().getId());
             taskResponseDto.setProjectName(task.getProject().getName());
             taskResponseDto.setProjectKey(task.getProject().getProjectKey());
+        }
+
+        if (task.getTags() != null && !task.getTags().isEmpty()) {
+            taskResponseDto.setTagIds(
+                    task.getTags()
+                            .stream()
+                            .map(tag -> tag.getId())
+                            .toList()
+            );
+
+            taskResponseDto.setTagNames(
+                    task.getTags()
+                            .stream()
+                            .map(tag -> tag.getName())
+                            .toList()
+            );
+        }
+
+        if (task.getReporter() != null) {
+            taskResponseDto.setReporterId(task.getReporter().getId());
+            taskResponseDto.setReporterName(
+                    task.getReporter().getFirstName() + " " + task.getReporter().getLastName()
+            );
+        }
+
+        if (task.getAssignee() != null) {
+            taskResponseDto.setAssigneeId(task.getAssignee().getId());
+            taskResponseDto.setAssigneeName(
+                    task.getAssignee().getFirstName() + " " + task.getAssignee().getLastName()
+            );
         }
 
         return taskResponseDto;

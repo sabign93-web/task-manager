@@ -8,9 +8,11 @@ import com.saba.taskmanager.exception.CompanyNotFoundException;
 import com.saba.taskmanager.repository.CompanyRepository;
 import com.saba.taskmanager.repository.ProjectRepository;
 import com.saba.taskmanager.repository.TaskRepository;
+import com.saba.taskmanager.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,11 +22,13 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final CompanyRepository companyRepository;
     private final TaskRepository taskRepository;
+    private final UserRepository userRepository;
 
-    public ProjectService(ProjectRepository projectRepository, CompanyRepository companyRepository, TaskRepository taskRepository) {
+    public ProjectService(ProjectRepository projectRepository, CompanyRepository companyRepository, TaskRepository taskRepository, UserRepository userRepository) {
         this.projectRepository = projectRepository;
         this.companyRepository = companyRepository;
         this.taskRepository = taskRepository;
+        this.userRepository = userRepository;
     }
 
     public Project createProject(Project project, Long companyId) {
@@ -70,4 +74,34 @@ public class ProjectService {
                 .distinct()
                 .toList();
     }
+
+    public Project addUserToProject(Long projectId, Long userId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Project not found with id: " + projectId));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+
+        List<User> users = project.getUsers() == null ? new ArrayList<>() : project.getUsers();
+
+        boolean alreadyExists = users.stream()
+                .anyMatch(existingUser -> existingUser.getId().equals(userId));
+
+        if (!alreadyExists) {
+            users.add(user);
+        }
+
+        project.setUsers(users);
+
+        return projectRepository.save(project);
+    }
+
+    public List<User> getUsersByProjectMembership(Long projectId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Project not found with id: " + projectId));
+
+        return project.getUsers() == null ? List.of() : project.getUsers();
+    }
+
+
 }

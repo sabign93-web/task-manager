@@ -2,6 +2,7 @@ package com.saba.taskmanager.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 public class Project {
@@ -18,6 +19,14 @@ public class Project {
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
+
+    @ManyToMany
+    @JoinTable(
+            name = "project_users",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<User> users;
 
     public Project() {
     }
@@ -64,5 +73,13 @@ public class Project {
 
     public void setCompany(Company company) {
         this.company = company;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 }

@@ -68,4 +68,20 @@ public class UserController {
                 .map(taskMapper::toResponseDto)
                 .toList();
     }
+
+    @GetMapping("/{id}/assigned-tasks")
+    public List<TaskResponseDto> getAssignedTasksByUserId(@PathVariable Long id) {
+        return userService.getAssignedTasksByUserId(id)
+                .stream()
+                .map(taskMapper::toResponseDto)
+                .toList();
+    }
+
+    @GetMapping("/{id}/reported-tasks")
+    public List<TaskResponseDto> getReportedTasksByUserId(@PathVariable Long id) {
+        return userService.getReportedTasksByUserId(id)
+                .stream()
+                .map(taskMapper::toResponseDto)
+                .toList();
+    }
 }
