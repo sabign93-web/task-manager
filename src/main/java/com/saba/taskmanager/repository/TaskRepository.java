@@ -35,4 +35,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     long countByPriority(TaskPriority priority);
 
     long countByDueDateBeforeAndStatusNot(LocalDate date, TaskStatus status);
+
+    List<Task> findTop5ByOrderByCreatedAtDesc();
 }

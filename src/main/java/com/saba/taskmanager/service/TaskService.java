@@ -203,4 +203,8 @@ public class TaskService {
                 new TaskChartItemDto("LOW", taskRepository.countByPriority(TaskPriority.LOW))
         );
     }
+
+    public List<Task> getRecentTasks() {
+        return taskRepository.findTop5ByOrderByCreatedAtDesc();
+    }
 }
