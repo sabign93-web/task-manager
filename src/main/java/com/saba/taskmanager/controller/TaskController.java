@@ -11,9 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequestMapping("/api/tasks")
 @RestController
@@ -144,6 +143,22 @@ public class TaskController {
     @GetMapping("/chart/priority")
     public List<TaskChartItemDto> getTasksByPriorityChart() {
         return taskService.getTasksByPriorityChart();
+    }
+
+    @GetMapping("/recent")
+    public List<TaskResponseDto> getRecentTasks() {
+        return taskService.getRecentTasks()
+                .stream()
+                .map(taskMapper::toResponseDto)
+                .toList();
+    }
+
+    @GetMapping("/upcoming")
+    public List<TaskResponseDto> getUpcomingTasks() {
+        return taskService.getUpcomingTasks()
+                .stream()
+                .map(taskMapper::toResponseDto)
+                .toList();
     }
 
 }
