@@ -26,8 +26,8 @@ public class User {
     @JoinColumn(name = "company_id")
     private Company company;
 
-    @OneToMany(mappedBy = "user")
-    private List<Task> tasks;
+    @OneToMany(mappedBy = "assignee")
+    private List<Task> assignedTasks;
 
     @ManyToMany(mappedBy = "users")
     private List<Project> projects;
@@ -93,12 +93,12 @@ public class User {
     public void setCompany(Company company) {
         this.company = company;
     }
-    public List<Task> getTasks() {
-        return tasks;
+    public List<Task> getAssignedTasks() {
+        return assignedTasks;
     }
 
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
+    public void setAssignedTasks(List<Task> assignedTasks) {
+        this.assignedTasks = assignedTasks;
     }
 
     public List<Project> getProjects() {

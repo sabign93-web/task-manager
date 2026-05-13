@@ -67,7 +67,7 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
 
-        if (taskRepository.existsByUserId(id)) {
+        if (taskRepository.existsByAssigneeId(id)) {
             throw new UserHasTasksException("Cannot delete user because it still has tasks");
         }
 
@@ -78,7 +78,7 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
 
-        return taskRepository.findByUserId(user.getId());
+        return taskRepository.findByAssigneeId(user.getId());
     }
 
     public List<Task> getAssignedTasksByUserId(Long userId) {

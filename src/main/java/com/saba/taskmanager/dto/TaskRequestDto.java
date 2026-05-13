@@ -18,8 +18,6 @@ public class TaskRequestDto {
 
     private LocalDate dueDate;
 
-    private Long userId;
-
     private Long projectId;
 
     private List<Long> tagIds;
@@ -78,20 +76,6 @@ public class TaskRequestDto {
 
     public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
-    }
-
-
-
-    public Long getUserId() {
-
-        return userId;
-
-    }
-
-    public void setUserId(Long userId) {
-
-        this.userId = userId;
-
     }
 
     public Long getProjectId() {
