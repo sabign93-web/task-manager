@@ -31,7 +31,6 @@ public class TaskController {
 
         Task savedTask = taskService.createTask(
                 task,
-                taskRequestDto.getUserId(),
                 taskRequestDto.getProjectId(),
                 taskRequestDto.getTagIds(),
                 taskRequestDto.getReporterId(),
@@ -80,7 +79,6 @@ public class TaskController {
         Task updatedTask = taskService.updateTask(
                 id,
                 task,
-                taskRequestDto.getUserId(),
                 taskRequestDto.getProjectId(),
                 taskRequestDto.getTagIds(),
                 taskRequestDto.getReporterId(),
@@ -159,6 +157,25 @@ public class TaskController {
                 .stream()
                 .map(taskMapper::toResponseDto)
                 .toList();
+    }
+
+    @GetMapping("/dashboard/overdue")
+    public List<TaskResponseDto> getOverduePanelTasks() {
+        return taskService.getOverduePanelTasks()
+                .stream()
+                .map(taskMapper::toResponseDto)
+                .toList();
+    }
+
+    @GetMapping("/dashboard/assignee-summary")
+    public List<AssigneeTaskSummaryDto> getAssigneeTaskSummary() {
+        return taskService.getAssigneeTaskSummary();
+    }
+
+    @GetMapping("/dashboard/reporter-summary")
+    public List<ReporterTaskSummaryDto> getReporterTaskSummary() {
+        return taskService.getReporterTaskSummary();
+
     }
 
 }

@@ -25,10 +25,6 @@ public class TaskResponseDto {
 
     private LocalDateTime updatedAt;
 
-    private Long userId;
-
-    private String userName;
-
     private Long projectId;
 
     private String projectName;
@@ -112,31 +108,6 @@ public class TaskResponseDto {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-
-    public Long getUserId() {
-
-        return userId;
-
-    }
-
-    public void setUserId(Long userId) {
-
-        this.userId = userId;
-
-    }
-
-    public String getUserName() {
-
-        return userName;
-
-    }
-
-    public void setUserName(String userName) {
-
-        this.userName = userName;
-
     }
 
     public Long getProjectId() {

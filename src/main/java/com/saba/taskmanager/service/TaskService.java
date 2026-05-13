@@ -1,6 +1,8 @@
 package com.saba.taskmanager.service;
 
+import com.saba.taskmanager.dto.AssigneeTaskSummaryDto;
 import com.saba.taskmanager.dto.DashboardSummaryDto;
+import com.saba.taskmanager.dto.ReporterTaskSummaryDto;
 import com.saba.taskmanager.dto.TaskChartItemDto;
 import com.saba.taskmanager.entity.*;
 import com.saba.taskmanager.exception.TaskNotFoundException;
@@ -41,14 +43,10 @@ public class TaskService {
     }
 
     public Task createTask(Task task,
-                           Long userId,
                            Long projectId,
                            List<Long> tagIds,
                            Long reporterId,
                            Long assigneeId) {
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
 
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project not found with id: " + projectId));
@@ -63,7 +61,6 @@ public class TaskService {
                 ? Collections.emptyList()
                 : tagRepository.findAllById(tagIds);
 
-        task.setUser(user);
         task.setProject(project);
         task.setTags(tags);
         task.setReporter(reporter);
@@ -101,7 +98,6 @@ public class TaskService {
 
     public Task updateTask(Long id,
                            Task updatedTask,
-                           Long userId,
                            Long projectId,
                            List<Long> tagIds,
                            Long reporterId,
@@ -109,9 +105,6 @@ public class TaskService {
 
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Task not found with id: " + id));
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
 
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project not found with id: " + projectId));
@@ -131,7 +124,6 @@ public class TaskService {
         task.setStatus(updatedTask.getStatus());
         task.setPriority(updatedTask.getPriority());
         task.setDueDate(updatedTask.getDueDate());
-        task.setUser(user);
         task.setProject(project);
         task.setTags(tags);
         task.setReporter(reporter);
@@ -215,4 +207,21 @@ public class TaskService {
                         TaskStatus.DONE
                 );
     }
+
+    public List<Task> getOverduePanelTasks() {
+        return taskRepository.findTop5ByDueDateBeforeAndStatusNotOrderByDueDateAsc(
+                LocalDate.now(),
+                TaskStatus.DONE
+        );
+    }
+
+    public List<AssigneeTaskSummaryDto> getAssigneeTaskSummary() {
+        return taskRepository.getTaskCountByAssignee();
+    }
+
+    public List<ReporterTaskSummaryDto> getReporterTaskSummary() {
+        return taskRepository.getTaskCountByReporter();
+    }
+
+
 }

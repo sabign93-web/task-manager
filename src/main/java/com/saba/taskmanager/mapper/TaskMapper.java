@@ -30,11 +30,6 @@ public class TaskMapper {
         taskResponseDto.setCreatedAt(task.getCreatedAt());
         taskResponseDto.setUpdatedAt(task.getUpdatedAt());
 
-        if (task.getUser() != null) {
-            taskResponseDto.setUserId(task.getUser().getId());
-            taskResponseDto.setUserName(task.getUser().getFirstName() + " " + task.getUser().getLastName());
-        }
-
         if (task.getProject() != null) {
             taskResponseDto.setProjectId(task.getProject().getId());
             taskResponseDto.setProjectName(task.getProject().getName());
