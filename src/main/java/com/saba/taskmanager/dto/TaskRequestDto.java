@@ -2,27 +2,43 @@ package com.saba.taskmanager.dto;
 
 import com.saba.taskmanager.entity.TaskPriority;
 import com.saba.taskmanager.entity.TaskStatus;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public class TaskRequestDto {
 
+    @NotBlank(message = "Title is required")
+
     private String title;
+
+    @NotBlank(message = "Description is required")
 
     private String description;
 
+    @NotNull(message = "Status is required")
+
     private TaskStatus status;
+
+    @NotNull(message = "Priority is required")
 
     private TaskPriority priority;
 
     private LocalDate dueDate;
 
+    @NotNull(message = "Project id is required")
+
     private Long projectId;
 
     private List<Long> tagIds;
 
+    @NotNull(message = "Reporter id is required")
+
     private Long reporterId;
+
+    @NotNull(message = "Assignee id is required")
 
     private Long assigneeId;
 
