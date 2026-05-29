@@ -94,4 +94,8 @@ public class UserService {
 
         return taskRepository.findByReporterId(user.getId());
     }
+
+//    public List<User> getUsersByCompanyId(Long companyId) {
+//        return userRepository.getByCompanyId(companyId);
+//    }
 }

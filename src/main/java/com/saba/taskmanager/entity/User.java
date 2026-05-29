@@ -15,12 +15,19 @@ public class User {
     private String firstName;
     private String lastName;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
     private String jobTitle;
     private boolean active;
     private LocalDateTime createdAt;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
 
     @ManyToOne
     @JoinColumn(name = "company_id")
@@ -86,10 +93,21 @@ public class User {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    public Role getRole() {
+        return role;
+    }
+    public void setRole(Role role) {
+        this.role = role;
+    }
     public Company getCompany() {
         return company;
     }
-
     public void setCompany(Company company) {
         this.company = company;
     }
