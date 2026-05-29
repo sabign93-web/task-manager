@@ -9,6 +9,7 @@ import com.saba.taskmanager.service.TaskService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -87,6 +88,12 @@ public class TaskController {
 
         return ResponseEntity.ok(taskMapper.toResponseDto(updatedTask));
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteTask(@PathVariable Long id) {
+        taskService.deleteTask(id);
+        return ResponseEntity.ok("Task deleted successfully");    }
 
     @GetMapping("/search")
     public List<TaskResponseDto> searchTasksByTitle(@RequestParam String title) {
