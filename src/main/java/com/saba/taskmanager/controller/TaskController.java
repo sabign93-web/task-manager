@@ -9,11 +9,11 @@ import com.saba.taskmanager.service.TaskService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequestMapping("/api/tasks")
 @RestController
@@ -32,7 +32,6 @@ public class TaskController {
 
         Task savedTask = taskService.createTask(
                 task,
-                taskRequestDto.getUserId(),
                 taskRequestDto.getProjectId(),
                 taskRequestDto.getTagIds(),
                 taskRequestDto.getReporterId(),
@@ -81,7 +80,6 @@ public class TaskController {
         Task updatedTask = taskService.updateTask(
                 id,
                 task,
-                taskRequestDto.getUserId(),
                 taskRequestDto.getProjectId(),
                 taskRequestDto.getTagIds(),
                 taskRequestDto.getReporterId(),
@@ -90,6 +88,12 @@ public class TaskController {
 
         return ResponseEntity.ok(taskMapper.toResponseDto(updatedTask));
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteTask(@PathVariable Long id) {
+        taskService.deleteTask(id);
+        return ResponseEntity.ok("Task deleted successfully");    }
 
     @GetMapping("/search")
     public List<TaskResponseDto> searchTasksByTitle(@RequestParam String title) {
@@ -144,6 +148,41 @@ public class TaskController {
     @GetMapping("/chart/priority")
     public List<TaskChartItemDto> getTasksByPriorityChart() {
         return taskService.getTasksByPriorityChart();
+    }
+
+    @GetMapping("/recent")
+    public List<TaskResponseDto> getRecentTasks() {
+        return taskService.getRecentTasks()
+                .stream()
+                .map(taskMapper::toResponseDto)
+                .toList();
+    }
+
+    @GetMapping("/upcoming")
+    public List<TaskResponseDto> getUpcomingTasks() {
+        return taskService.getUpcomingTasks()
+                .stream()
+                .map(taskMapper::toResponseDto)
+                .toList();
+    }
+
+    @GetMapping("/dashboard/overdue")
+    public List<TaskResponseDto> getOverduePanelTasks() {
+        return taskService.getOverduePanelTasks()
+                .stream()
+                .map(taskMapper::toResponseDto)
+                .toList();
+    }
+
+    @GetMapping("/dashboard/assignee-summary")
+    public List<AssigneeTaskSummaryDto> getAssigneeTaskSummary() {
+        return taskService.getAssigneeTaskSummary();
+    }
+
+    @GetMapping("/dashboard/reporter-summary")
+    public List<ReporterTaskSummaryDto> getReporterTaskSummary() {
+        return taskService.getReporterTaskSummary();
+
     }
 
 }

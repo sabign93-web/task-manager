@@ -69,7 +69,7 @@ public class ProjectService {
 
         return taskRepository.findByProjectId(project.getId())
                 .stream()
-                .map(Task::getUser)
+                .map(Task::getAssignee)
                 .filter(user -> user != null)
                 .distinct()
                 .toList();
