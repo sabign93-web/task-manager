@@ -7,6 +7,7 @@ import com.saba.taskmanager.dto.RegisterResponseDto;
 import com.saba.taskmanager.entity.User;
 import com.saba.taskmanager.service.AuthService;
 import jakarta.validation.Valid;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,5 +28,17 @@ public class AuthController {
     @PostMapping("/login")
     public AuthResponseDto login(@Valid @RequestBody LoginRequestDto loginRequestDto) {
         return authService.login(loginRequestDto);
+    }
+    @GetMapping("/me")
+    public RegisterResponseDto getCurrentUser(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+
+        return new RegisterResponseDto(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getRole().name()
+        );
     }
 }
